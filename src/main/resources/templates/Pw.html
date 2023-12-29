@@ -1,0 +1,68 @@
+<!-- Ajoutez cette section pour gérer les PWs -->
+<div th:if="${mode eq 'add' or mode eq 'update'} "
+     class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50  backdrop-blur-sm"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <div
+            class="relative h-3/5 w-1/4 bg-gray-950 border-4 border-violet-700 rounded-lg flex items-center justify-center shadow-xl border border-gray-300">
+        <form th:action="${mode eq 'add' ? '/pw/addpw' : '/pw/update/' + pw.id}"
+              th:object="${pw}" method="post" class="w-full flex flex-col items-center justify-center ">
+            <input type="text" hidden="hidden" th:field="*{id}" />
+
+            <span th:switch="${mode}" class="text-violet-600">
+                <p th:case="'add'" class="text-xl font-semibold mb-4">Add PW</p>
+                <p th:case="'update'" class="text-xl font-semibold mb-4">Update PW</p>
+            </span>
+
+            <div class="mb-4 ">
+                <label for="title" class="block text-sm font-medium text-gray-500 font-semibold">Title:</label>
+                <input id="title" th:field="*{title}" type="text" placeholder="Enter title"
+                       class="rounded  text-sm py-2 px-10 my-2 bg-violet-100 border text-violet-700 border-violet-500 focus:outline-none focus:ring focus:border-violet-700 ">
+            </div>
+
+            <!-- Ajoutez d'autres champs de votre entité PW ici -->
+            <div class="mb-4 px-10">
+                <label for="objectif" class="block text-sm font-medium text-gray-500 font-semibold">Objectif:</label>
+                <textarea id="objectif" th:field="*{objectif}" placeholder="Enter objectif"
+                          class="rounded text-sm py-2 px-10 my-2 bg-violet-100 border text-violet-700 border-violet-500 focus:outline-none focus:ring focus:border-violet-700"></textarea>
+            </div>
+
+            <div class="mb-4 px-10">
+                <label for="docs" class="block text-sm font-medium text-gray-500 font-semibold">Docs:</label>
+                <textarea id="docs" th:field="*{docs}" placeholder="Enter docs"
+                          class="rounded text-sm py-2 px-10 my-2 bg-violet-100 border text-violet-700 border-violet-500 focus:outline-none focus:ring focus:border-violet-700"></textarea>
+            </div>
+
+            <div class="mb-4 px-10">
+                <label for="tooth"
+                       class="block text-sm font-medium text-gray-500 font-semibold">Tooth:</label>
+                <select id="tooth" th:field="*{tooth.id}"
+                        class="rounded text-sm py-2 px-10 my-2 bg-violet-100 border text-violet-700 border-violet-500 focus:outline-none focus:ring focus:border-violet-700">
+                    <option th:each="tooth : ${teeth}" th:value="${tooth.id}"
+                            th:text="${tooth.name}"></option>
+                </select>
+            </div>
+
+            <div class="mb-4 px-10">
+                <label for="groupes" class="block text-sm font-medium text-gray-500 font-semibold">Groupes:</label>
+                <select id="groupes" name="selectedGroupes" multiple="multiple"
+                        class="rounded text-sm py-2 px-10 my-2 bg-violet-100 border text-violet-700 border-violet-500 focus:outline-none focus:ring focus:border-violet-700">
+                    <option th:each="groupe : ${groupes}" th:value="${groupe.id}"
+                            th:text="${groupe.code + ' - ' + groupe.year}"></option>
+                </select>
+
+            </div>
+
+
+            <!-- Ajoutez d'autres champs de votre entité PW ici -->
+
+            <span>
+                <button type="submit"
+                        class="bg-yellow-200 text-yellow-700 font-medium px-4 py-1.5 rounded-md hover:bg-yellow-400">Submit</button>
+                <a href="/home" class="absolute top-2 right-2 text-yellow-600 ">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            </span>
+
+        </form>
+        </div>
+</div>

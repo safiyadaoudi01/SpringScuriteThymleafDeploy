@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>PW</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="font-sans bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="ml-64">
+    <div th:replace="sidebarprof.html"></div>
+
+    <div class="max-w-5xl w-full p-12 bg-white shadow-md rounded-md">
+
+
+        <div class="flex flex-col">
+            <div class="-m-1.5 overflow-x-auto">
+                <div class="p-1.5 min-w-full inline-block align-middle">
+                    <div class="border rounded-lg overflow-hidden dark:border-gray-700">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Titre</th>
+                                <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Objectif</th>
+                                <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Dent</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pw, pwIndex : ${pws}">
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${pw.title}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${pw.objectif}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200">
+                <span th:text="${pw.tooth.name}"></span>
+                <span th:unless="${pw.tooth != null}">Aucun dent</span>
+            </td>
+
+        </tr>
+        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+</div>
+
+</body>
+</html>

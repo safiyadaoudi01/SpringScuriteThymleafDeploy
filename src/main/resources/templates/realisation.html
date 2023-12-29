@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Realisation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body class="font-sans bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="ml-64">
+<div th:replace="sidebarprof.html"></div>
+    <div class="max-w-5xl w-full p-12 bg-white shadow-md rounded-md">
+
+    <div class="flex flex-col">
+        <div class="-m-1.5 overflow-x-auto">
+            <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="border rounded-lg overflow-hidden dark:border-gray-700">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead>
+        <tr>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Date</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Temps</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Titre du TP</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Objectif du TP</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Image de face</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Image de côté</th>
+        </tr>
+        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+        <tr th:each="student, studentIndex : ${studentPWList}">
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${student.date}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${student.time}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${student.pw.title}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${student.pw.objectif}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200">
+                <img th:if="${student.imageFront != null}" th:src="'data:image/jpeg;base64,' + ${encodedPhotosFront[studentIndex.index]}"  alt="Student Photo" style="border-radius: 30%; width: 100px; height: 100px;"/>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200">
+                <img th:if="${student.imageSide != null}" th:src="'data:image/jpeg;base64,' + ${encodedPhotosSide[studentIndex.index]}" alt="Student Photo" style="border-radius: 30%; width: 100px; height: 100px;"/>
+            </td>
+        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+
+</html>

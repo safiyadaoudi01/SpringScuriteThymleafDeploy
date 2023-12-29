@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Popup - Ajouter DonnéeSante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+<div th:if="${loggedInUser}">
+    <h2>Welcome, <span th:text="${loggedInUser.getUsername()}"></span>!</h2>
+    <!-- Affichez d'autres informations du patient ici -->
+</div>
+<div th:unless="${loggedInUser}">
+    <p>User not logged in.</p>
+</div>
+
+<h1>Ajouter DonnéeSante</h1>
+
+<!-- Add new DonnéeSante form -->
+<button type="button" onclick="toggleForm()">+</button>
+<form id="donneeSanteForm" action="/add" method="post" th:object="${newDonneeSante}" style="display:none;">
+    <!-- Add DonnéeSante fields here -->
+    <label for="poids">Poids:</label>
+    <input type="text" id="poids" name="poids" th:field="*{poids}"/>
+
+    <label for="frequence">Fréquence:</label>
+    <input type="text" id="frequence" name="frequence" th:field="*{frequence}"/>
+
+    <label for="pression">Pression:</label>
+    <input type="text" id="pression" name="pression" th:field="*{pression}"/>
+
+    <label for="glucose">Glucose:</label>
+    <input type="text" id="glucose" name="glucose" th:field="*{glucose}"/>
+
+    <!-- Add Allergies -->
+    <button type="button" onclick="addRow('allergiesContainer', 'allergies', 'Allergie', 'nom')">Ajouter Allergie</button>
+    <div id="allergiesContainer"></div>
+
+    <!-- Add Prescriptions -->
+    <button type="button" onclick="addRow('prescriptionsContainer', 'prescriptions', 'Prescription', 'contenu')">Ajouter Prescription</button>
+    <div id="prescriptionsContainer"></div>
+
+    <!-- Add Medicaments -->
+    <button type="button" onclick="addRow('medicamentsContainer', 'medicaments', 'Médicament', 'nom')">Ajouter Médicament</button>
+    <div id="medicamentsContainer"></div>
+
+    <!-- Add ResultatsTests -->
+    <button type="button" onclick="addRow('resultatsTestsContainer', 'resultatsTests', 'RésultatTest', 'url')">Ajouter RésultatTest</button>
+    <div id="resultatsTestsContainer"></div>
+
+    <button type="submit">Enregistrer</button>
+</form>
+
+<script th:inline="javascript">
+    function addRow(containerId, fieldName, placeholder, property) {
+        var container = document.getElementById(containerId);
+        var index = container.children.length;
+
+        var template = document.createElement('div');
+        template.innerHTML = `<label for="${fieldName}[${index}].${property}">${placeholder}:</label>
+                              <input type="text" id="${fieldName}[${index}].${property}" name="${fieldName}[${index}].${property}" th:field="*{${fieldName}[${index}].${property}}" />`;
+
+        container.appendChild(template);
+        var inputField = template.querySelector('input');
+        inputField.addEventListener('change', function () {
+            if (!newDonneeSante[fieldName]) {
+                newDonneeSante[fieldName] = [];
+            }
+            while (newDonneeSante[fieldName].length <= index) {
+                newDonneeSante[fieldName].push({ nom: '' });
+            }
+            newDonneeSante[fieldName][index].nom = inputField.value;
+
+            // Log the current state of newDonneeSante
+            console.log('Current state of newDonneeSante:', newDonneeSante);
+        });
+    }
+    function toggleForm() {
+        var form = document.getElementById("donneeSanteForm");
+        var button = document.querySelector("button"); // Assuming it's the first button on the page
+
+        if (form.style.display === "none") {
+            form.style.display = "block";
+            button.textContent = '-';
+        } else {
+            form.style.display = "none";
+            button.textContent = '+';
+        }
+    }
+
+</script>
+
+</body>
+</html>

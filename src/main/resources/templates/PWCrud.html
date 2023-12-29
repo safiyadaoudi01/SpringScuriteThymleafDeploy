@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Pw</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://unpkg.com/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6.3.1/dist/tippy-bundle.umd.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="font-sans bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="ml-64">
+    <div th:replace="sidebarprof.html"></div>
+
+    <div class="max-w-5xl w-full p-12 bg-white shadow-md rounded-md">
+    <button type="button" onclick="toggleForm()" class="bg-blue-500 text-white py-2 px-4 rounded-full mb-4">+ Ajouter un travail pratique</button>
+    <form id="pwForm" action="/prof/pw/addpw" method="post" th:object="${pw}" th:with="pw=${pw}" enctype="multipart/form-data" style="display:none; margin-bottom: 20px;" onsubmit="return validateForm()">
+        <input type="hidden" name="pwId" th:value="${pw.id}" />
+
+        <label for="title" class="block mb-2">Titre:</label>
+        <input type="text" id="title" name="title" th:field="*{title}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+
+        <label for="objectif" class="block mb-2">Objectif:</label>
+        <input type="text" id="objectif" name="objectif" th:field="*{objectif}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+
+        <label for="docsFile" class="block mb-2">Document:</label>
+        <input type="file" id="docsFile" name="docsFile" class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600
+    file:bg-gray-50 file:border-0
+    file:bg-gray-100 file:me-4
+    file:py-3 file:px-4
+    dark:file:bg-gray-700 dark:file:text-gray-400"/>
+
+        <label for="tooth" class="block text-sm font-medium text-gray-500 font-semibold">Dent:</label>
+        <select id="tooth" th:field="*{tooth.id}" class="w-full p-2 border border-gray-300 mb-4 rounded">
+            <option th:each="tooth : ${teeth}" th:value="${tooth.id}" th:text="${tooth.name}"></option>
+        </select>
+
+
+
+        <label for="groupes" class="block text-sm font-medium text-gray-500 font-semibold">Groupes:</label>
+        <select id="groupes" name="selectedGroupes" multiple="multiple" class="w-full p-2 border border-gray-300 mb-4 rounded">
+            <option th:each="groupe : ${professor.groupes}" th:value="${groupe.id}"
+                    th:text="${groupe.code + ' - ' + groupe.year}"></option>
+        </select>
+
+        <div style="display: flex; justify-content: flex-end;" >
+            <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-900">Sauvegarder</button>
+        </div>
+    </form>
+        <div class="flex flex-col">
+            <div class="-m-1.5 overflow-x-auto">
+                <div class="p-1.5 min-w-full inline-block align-middle">
+                    <div class="border rounded-lg overflow-hidden dark:border-gray-700">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead>
+        <tr>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Titre</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Objectif</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Dent</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Document</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Groupes</th>
+            <th scope="col" class="px-6 py-3 text-start text-lg font-sans text-gray-500 uppercase">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pw, status : ${pwList}">
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${pw.title}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${pw.objectif}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><span th:text="${pw.tooth.name}"></span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200"><a th:href="@{'/pw/download/' + ${pw.id}}" class="bg-blue-300 text-white font-medium px-4 py-1.5 rounded-md hover:bg-blue-400" download>
+                <i class="bi bi-cloud-download mr-2"></i>Download
+            </a></td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200">
+                <ul>
+                    <li th:each="groupe : ${pw.groupes}" th:text="${groupe.code + ' - ' + groupe.year}"></li>
+                </ul>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-[18px] text-gray-800 font-serif dark:text-gray-200">
+                <a href="#"  th:attr="data-id=${pw.id}" th:onclick="'openEditModal(' + ${pw.id} + ')'" data-tippy-content="Modifier"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-blue-500">
+                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                    <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                </svg>
+                </a>
+                <a href="#" data-id="${pw.id}" th:onclick="'openDeleteModal(' + ${pw.id} + ')'" data-tippy-content="Supprimer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-red-500">
+                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                </svg>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="editModal" class="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 hidden">
+    <div class="absolute w-full h-full bg-gray-800 opacity-50"></div>
+    <div class="bg-white p-8 rounded-md z-50 w-96">
+        <h2 class="text-2xl font-bold mb-4">Modifier le contenu de TP</h2>
+
+        <form id="editPwForm" action="/prof/pw/update" method="post" th:object="${pw}" th:with="professor=${professor}" enctype="multipart/form-data">
+            <input type="hidden" id="id" th:field="*{id}" />
+            <label for="edittitle" class="block mb-2">Title:</label>
+            <input type="text" id="edittitle" name="title" th:field="*{title}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+
+            <label for="editobjectif" class="block mb-2">Objectif:</label>
+            <input type="text" id="editobjectif" name="objectif" th:field="*{objectif}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+
+            <label for="editDocsFile" class="block mb-2">Docs:</label>
+            <input type="file" id="editDocsFile" name="editDocsFile"/>
+
+            <label for="edittooth" class="block mb-2">Tooth:</label>
+            <select id="edittooth" name="toothId" class="w-full p-2 border border-gray-300 mb-4 rounded">
+                <option th:each="tooth : ${teeth}" th:value="${tooth.id}" th:text="${tooth.name}"></option>
+            </select>
+
+            <label for="editgroupe" class="block mb-2">Groupes:</label>
+            <select id="editgroupe" name="selectedGroupes" multiple="multiple" class="w-full p-2 border border-gray-300 mb-4 rounded">
+                <option th:each="groupe : ${professor.groupes}" th:value="${groupe.id}" th:text="${groupe.code + ' - ' + groupe.year}"></option>
+            </select>
+
+            <div class="flex justify-center items-center space-x-4">
+                <button data-modal-toggle="deleteModal" onclick="closeEditModal()" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                    Annuler
+                </button>
+                <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">Sauvegarder</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- delete modal -->
+<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+    <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+        <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+
+            <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="mb-4 text-gray-500 dark:text-gray-300">Êtes-vous sûr de vouloir supprimer ce TP ?</p>
+            <div class="flex justify-center items-center space-x-4">
+                <button data-modal-toggle="deleteModal" onclick="closeDeleteModal()" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                    Non, Annuler
+                </button>
+                <button id="deleteButton" type="button" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                    Oui,Je suis sûr
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script th:inline="javascript">
+    function openEditModal(id) {
+       console.log("Opening modal for Pw ID:", id);
+       var modal = document.getElementById("editModal");
+       // Close the modal initially
+       modal.style.display = "none";
+
+       // Open the modal
+       modal.style.display = "flex";
+       $.ajax({
+           type: 'GET',
+           url: '/prof/pw/findOne/' + id,
+           success: function(data) {
+               console.log('Data:', data);
+               $('#edittitle').val(data.title);
+               $('#editobjectif').val(data.objectif);
+               $('#editdocs').val(data.docs);
+               $('#edittooth').val(data.tooth.id);
+               var selectedGroupes = data.groupes.map(function(groupe) {
+                 return groupe.id;
+               });
+                $('#editgroupe').val(selectedGroupes);
+
+
+
+               $('#id').val(data.id);
+
+           },
+           error: function(xhr, status, error) {
+               console.log('Error fetching groupe details:');
+               console.log('Error:', error);
+           }
+
+      });
+   }
+
+   function closeEditModal() {
+       var modal = document.getElementById("editModal");
+       modal.style.display = "none";
+   }
+
+
+
+
+   function toggleForm() {
+       var form = document.getElementById("pwForm");
+       var button = document.querySelector("button"); // Assuming it's the first button on the page
+
+       if (form.style.display === "none") {
+           form.style.display = "block";
+           button.textContent = '-';
+       } else {
+           form.style.display = "none";
+           button.textContent = '+ Ajouter un travail pratique';
+       }
+   }
+
+   tippy('[data-tippy-content]', {
+        placement: 'right',
+        theme: 'light',
+    });
+
+    function openDeleteModal(id) {
+        var deleteModal = document.getElementById("deleteModal");
+        deleteModal.style.display = "flex";
+        console.log('id to delete:', id);
+
+        // Assuming you have a delete button inside the delete modal
+        var deleteButton = document.getElementById("deleteButton");
+        deleteButton.onclick = function() {
+            // Perform delete operation using AJAX
+            $.ajax({
+                type: 'GET',
+                url: '/prof/pw/delete/' + id,
+                success: function() {
+                    // Handle success (e.g., remove row from the table)
+                    console.log('Student deleted successfully');
+                    // Close the delete modal
+                    deleteModal.style.display = "none";
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error deleting student:', error);
+                    // Close the delete modal (optional)
+                    deleteModal.style.display = "none";
+                }
+            });
+        };
+    }
+    function closeDeleteModal() {
+        var modal = document.getElementById("deleteModal");
+        modal.style.display = "none";
+    }
+
+function validateForm() {
+    // Get values from the form
+
+    var title = document.getElementById('title').value;
+    var objectif = document.getElementById('objectif').value;
+    var tooth = document.getElementById('tooth').value;
+
+    // Get selected groupes values from the multi-select dropdown
+    var groupesSelect = document.getElementById('groupes');
+    var selectedGroupes = [];
+    for (var i = 0; i < groupesSelect.options.length; i++) {
+        if (groupesSelect.options[i].selected) {
+            selectedGroupes.push(groupesSelect.options[i].value);
+        }
+    }
+
+    // Check if any of the required fields are empty
+    if (!title || !objectif || !docsFile || !tooth || selectedGroupes.length === 0) {
+        // Display a red SweetAlert error message
+        Swal.fire({
+            position: "top-end",
+            icon: 'error',
+            title: 'Entrez les données nécessaires',
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+        return false; // Prevent form submission
+    }
+    Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Le TP à été ajouté",
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+    // If all required fields are filled, allow form submission
+    return true;
+}
+
+
+
+
+</script>
+</body>
+</html>

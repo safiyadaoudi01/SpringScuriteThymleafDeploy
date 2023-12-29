@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Etudiants</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            text-align: center;
+            background-color: #FFEBCD
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #00008B;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+            margin: 0 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a.delete {
+            color: red;
+        }
+
+        a:hover {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        a.delete:hover {
+            background-color: #ff6347;
+        }
+
+        /* Ajout du style pour les liens de suppression (en rouge) */
+        a.delete {
+            color: red;
+        }
+
+        a.add-btn {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        a.add-btn:hover {
+            background-color: #005684;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Gestion des Etudiants</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Nombre</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.username}"></td>
+        <td th:text="${student.email}"></td>
+        <td th:text="${student.number}"></td>
+        <td>
+            <a th:href="@{/students/edit/{id}(id=${student.id})}">Modifier</a>
+            |
+            <a th:href="@{'/students/delete/' + ${student.id}}" class="delete">Supprimer</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a  class="bg-blue-500 text-white py-2 px-4 rounded mt-4 inline-block" onclick="openAddStudentModal()">Ajouter un Etudiant</a>
+<div id="addStudentModal" class="modal">
+    <div class="modal-content">
+        <!-- Contenu de addProf.html va être chargé ici -->
+        <h2 class="text-2xl font-bold mb-4">Ajouter un Professeur</h2>
+        <form th:action="@{/addstudent}" method="post" th:object="${student}" class="mb-4">
+            <label for="username" class="block mb-2">Username:</label>
+            <input type="text" id="username" th:field="*{username}" required class="w-full p-2 border border-gray-300"/>
+
+            <label for="password" class="block mb-2">Password:</label>
+            <input type="password" id="password" th:field="*{password}" required class="w-full p-2 border border-gray-300"/>
+
+            <label for="number" class="block mb-2">Grade:</label>
+            <input type="text" id="number" th:field="*{number}" required class="w-full p-2 border border-gray-300"/>
+
+            <label for="email" class="block mb-2">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required class="w-full p-2 border border-gray-300"/>
+
+            <input type="submit" value="Ajouter" class="bg-blue-500 text-white py-2 px-4 rounded"/>
+        </form>
+        <a href="#" class="text-blue-500 hover:underline" onclick="closeAddProfModal()">Fermer</a>
+    </div>
+</div>
+
+
+</body>
+<script>
+function openStudentProfModal() {
+var modal = document.getElementById("addStudentModal");
+modal.style.display = "block";
+}
+
+function closeAddStudentModal() {
+var modal = document.getElementById("addStudentModal");
+modal.style.display = "none";
+}
+</script>
+</html>

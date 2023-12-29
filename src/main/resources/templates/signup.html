@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        form {
+            width: 100%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.25rem;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        .role-label label {
+            margin-right: 1rem; /* Ajout de marge à droite pour séparer le label des boutons */
+        }
+
+        .role-label {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-label div {
+            margin-right: 1rem;
+        }
+
+        button {
+            background-color: #3490dc;
+            color: #fff;
+            padding: 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #2779bd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign Up</h2>
+
+    <form th:action="@{/signup}" th:object="${utilisateur}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" th:field="*{username}" required/>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" th:field="*{password}" required/>
+        <label for="grade">Grade:</label>
+        <input type="grade" id="grade"  required/>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required/>
+
+
+
+
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+</body>
+</html>

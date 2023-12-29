@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Etudiant</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Ajouter un Etudiant</h2>
+
+<form th:action="@{/addstudent}" method="post" th:object="${student}">
+    <label>Nom: <input type="text" th:field="*{lastName}" required/></label><br/>
+    <label>Prénom: <input type="text" th:field="*{firstName}" required/></label><br/>
+    <label>Username: <input type="text" th:field="*{userName}" required/></label><br/>
+    <label>Mot de passe: <input type="text" th:field="*{password}" required/></label><br/>
+
+    <label>Nombre d'etudiant: <input type="text" th:field="*{number}" required/></label><br/>
+    <input type="submit" value="Ajouter"/>
+</form>
+
+</body>
+</html>

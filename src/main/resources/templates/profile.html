@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="font-sans bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="ml-64">
+  <div th:replace="sidebarprof.html"></div>
+
+  <div class="max-w-6xl w-full p-12 bg-white shadow-md rounded-md">
+    <form id="editProfForm" action="/profile/update" method="post" th:object="${professor}" th:with="professor=${professor}" enctype="multipart/form-data" style="margin-bottom: 20px;"  >
+      <label for="photo" class="block mb-2 text-[18px] text-gray-800 font-serif dark:text-gray-200">Photo existante :</label>
+      <div class="flex justify-center items-center space-x-4">
+        <img id="photo" th:if="${professor.photo != null}" th:src="'data:image/jpeg;base64,' + ${encodedPhoto}" alt="Student Photo" style="border-radius: 30%; width: 100px; height: 100px;"/>
+      </div>
+      <input type="hidden" id="pass" th:field="*{password}"/>
+      <input type="hidden" id="id" th:field="*{id}"/>
+      <label for="editphotoFile" class="block mb-2 text-[18px] text-gray-800 font-serif dark:text-gray-200">Changer la photo:</label>
+      <input id="editphotoFile" name="editphotoFile" type="file" accept="image/*" class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600
+    file:bg-gray-50 file:border-0
+    file:bg-gray-100 file:me-4
+    file:py-3 file:px-4
+    dark:file:bg-gray-700 dark:file:text-gray-400" />
+
+      <label for="email" class="block mb-2 text-[18px] text-gray-800 font-serif dark:text-gray-200">Email:</label>
+      <input type="text" id="email" name="email" th:field="*{email}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+
+      <label for="username" class="block mb-2 text-[18px] text-gray-800 font-serif dark:text-gray-200">Username:</label>
+      <input type="text" id="username" name="username" th:field="*{username}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+      <label for="grade" class="block mb-2 text-[18px] text-gray-800 font-serif dark:text-gray-200">Grade:</label>
+      <input type="text" id="grade" name="grade" th:field="*{grade}" class="w-full p-2 border border-gray-300 mb-4 rounded" />
+
+      <div style="display: flex; justify-content: flex-end;" >
+        <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-900">Sauvegarder</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>
